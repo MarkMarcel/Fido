@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Fido</string>
+    <string name="app_name">Fido News</string>
+    <string name="title_headlines_screen">Latest</string>
 </resources>

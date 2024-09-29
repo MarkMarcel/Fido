@@ -1,3 +1,4 @@
+/*
 package com.marcel.fido.articles.ui
 
 import androidx.lifecycle.viewModelScope
@@ -50,4 +51,4 @@ data class ArticleListViewModelState(
 
 sealed class ArticleListViewModelIntent : FidoViewModelIntent() {
     data class OnLoadArticles(val sources: List<String>): ArticleListViewModelIntent()
-}
+}*/

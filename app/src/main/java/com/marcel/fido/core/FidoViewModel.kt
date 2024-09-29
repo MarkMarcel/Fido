@@ -18,18 +18,5 @@ abstract class FidoViewModel<
 
     abstract fun attachArguments(arguments: A)
 
-    abstract fun onIntent(intent: FidoViewModelIntent)
-}
-
-abstract class CompositeFidoViewModel<
-        A : FidoViewModelArguments,
-        I : FidoViewModelIntent,
-        S : FidoViewModelState> : FidoViewModel<A, I, S>() {
-    abstract val childViewModels: List<FidoViewModel<out FidoViewModelArguments, *, *>>
-
-    open override fun onIntent(intent: FidoViewModelIntent) {
-        childViewModels.forEach {
-            it.onIntent(intent)
-        }
-    }
+    abstract fun onIntent(intent: I)
 }

@@ -1,3 +1,4 @@
+/*
 package com.marcel.fido.sources.ui
 
 import androidx.lifecycle.viewModelScope
@@ -46,6 +47,7 @@ class SourceSelectionViewModel(
 
             is SourceSelectionViewModelIntent.OnSourceSelected -> {
                 val currentSelection = state.value.selectedSources.toMutableSet()
+                currentSelection.clear()
                 currentSelection.add(intent.id)
                 viewModelScope.launch {
                     stateChanges.emit(state.value.copy(selectedSources = currentSelection.toSet()))
@@ -69,4 +71,4 @@ sealed class SourceSelectionViewModelIntent : FidoViewModelIntent() {
     data object OnLoadSources : SourceSelectionViewModelIntent()
     data class OnSourceRemoved(val id: String) : SourceSelectionViewModelIntent()
     data class OnSourceSelected(val id: String) : SourceSelectionViewModelIntent()
-}
+}*/
