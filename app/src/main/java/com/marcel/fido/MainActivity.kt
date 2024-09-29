@@ -20,19 +20,25 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
+import com.marcel.fido.ui.article.ArticleScreen
+import com.marcel.fido.ui.article.ArticleScreenViewModel
 import com.marcel.fido.ui.headlines.HeadlinesScreen
 import com.marcel.fido.ui.headlines.HeadlinesScreenCallbacks
 import com.marcel.fido.ui.headlines.HeadlinesScreenViewModel
 import com.marcel.fido.ui.headlines.HeadlinesScreenViewModelIntent
 import com.marcel.fido.ui.theme.FidoTheme
+import kotlinx.serialization.Serializable
 import org.koin.android.ext.android.inject
+
+@Serializable
+data class ArticleRoute(val id: String)
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val headlinesScreenViewModel: HeadlinesScreenViewModel by inject()
         setContent {
             val navController = rememberNavController()
             FidoTheme {
@@ -58,13 +64,18 @@ class MainActivity : ComponentActivity() {
                         startDestination = "/"
                     ) {
                         composable(route = "/") {
+                            val headlinesScreenViewModel: HeadlinesScreenViewModel by inject()
                             val callbacks = HeadlinesScreenCallbacks(
                                 onSourceSelected = { id ->
                                     headlinesScreenViewModel.onIntent(
                                         HeadlinesScreenViewModelIntent.OnSourceSelected(id)
                                     )
                                 },
-                                onViewArticle = { id -> }
+                                onViewArticle = { id ->
+                                    navController.navigate(
+                                        ArticleRoute(id = id)
+                                    )
+                                }
                             )
                             HeadlinesScreen(
                                 Modifier
@@ -72,6 +83,14 @@ class MainActivity : ComponentActivity() {
                                     .padding(horizontal = 16.dp),
                                 headlinesScreenViewModel,
                                 callbacks
+                            )
+                        }
+                        composable<ArticleRoute> {backStackEntry ->
+                            val route: ArticleRoute = backStackEntry.toRoute()
+                            val articleScreenViewModel: ArticleScreenViewModel by inject()
+                            ArticleScreen(
+                                id = route.id,
+                                viewModel = articleScreenViewModel
                             )
                         }
                     }

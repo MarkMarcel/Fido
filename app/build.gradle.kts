@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -65,6 +66,7 @@ dependencies {
     implementation(libs.http.logging)
     implementation(libs.koin)
     implementation(libs.kotlinx.datetime)
+    implementation(libs.kotlinx.serialization)
     implementation(libs.retrofit)
     implementation(libs.viewmodel)
     testImplementation(libs.junit)
