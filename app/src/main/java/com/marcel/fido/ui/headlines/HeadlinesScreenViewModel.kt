@@ -50,7 +50,15 @@ class HeadlinesScreenViewModel(
             HeadlinesScreenViewModelIntent.OnLoadSources -> {
                 viewModelScope.launch {
                     sourceRepository.getSources().onSuccess {
-                        stateChanges.emit(state.value.copy(allSources = it.take(5)))
+                        stateChanges.emit(
+                            state.value.copy(
+                                allSources = it.take(15),
+                                selectedSources = it.take(1).map { source ->
+                                    source.id
+                                }.toSet()
+                            )
+                        )
+                        onIntent(HeadlinesScreenViewModelIntent.OnLoadLatestArticles)
                     }.onFailure {
                         stateChanges.emit(
                             state.value.copy(errorMessage = it.message ?: "Couldn't load sources")

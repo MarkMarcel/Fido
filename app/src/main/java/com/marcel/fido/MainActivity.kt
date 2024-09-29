@@ -26,6 +26,7 @@ import com.marcel.fido.ui.article.ArticleScreenViewModel
 import com.marcel.fido.ui.headlines.HeadlinesScreen
 import com.marcel.fido.ui.headlines.HeadlinesScreenCallbacks
 import com.marcel.fido.ui.headlines.HeadlinesScreenViewModel
+import com.marcel.fido.ui.headlines.HeadlinesScreenViewModelArguments
 import com.marcel.fido.ui.headlines.HeadlinesScreenViewModelIntent
 import com.marcel.fido.ui.theme.FidoTheme
 import kotlinx.serialization.Serializable
@@ -33,6 +34,9 @@ import org.koin.android.ext.android.inject
 
 @Serializable
 data class ArticleRoute(val id: String)
+
+@Serializable
+object HeadlinesRoute
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -61,10 +65,13 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .padding(innerPadding),
                         navController = navController,
-                        startDestination = "/"
+                        startDestination = HeadlinesRoute
                     ) {
-                        composable(route = "/") {
+                        composable<HeadlinesRoute> {
                             val headlinesScreenViewModel: HeadlinesScreenViewModel by inject()
+                            headlinesScreenViewModel.attachArguments(
+                                HeadlinesScreenViewModelArguments()
+                            )
                             val callbacks = HeadlinesScreenCallbacks(
                                 onSourceSelected = { id ->
                                     headlinesScreenViewModel.onIntent(

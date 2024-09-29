@@ -1,7 +1,9 @@
 package com.marcel.fido.ui.article
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -28,6 +30,7 @@ fun ArticleScreen(
     )
     val article by remember {
         derivedStateOf {
+            Log.d("MARK_GIC",state.article.toString())
             ArticleScreenViewModelState::article.get(state)
         }
     }
@@ -37,8 +40,9 @@ fun ArticleScreen(
                 AsyncImage(
                     it.urlToImage,
                     contentDescription = it.title,
-                    modifier = Modifier.height(80.dp)
+                    modifier = Modifier.fillMaxWidth()
                 )
+                Spacer(Modifier.size(8.dp))
             }
             item {
                 Column {
@@ -52,6 +56,6 @@ fun ArticleScreen(
         }
     }
     LaunchedEffect(Unit) {
-        viewModel.onIntent(ArticleScreenViewModelIntent.OnLoadArticle(id))
+        viewModel.attachArguments(ArticleScreenViewModelArguments(id))
     }
 }

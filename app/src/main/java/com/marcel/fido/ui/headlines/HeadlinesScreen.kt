@@ -24,6 +24,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
@@ -35,6 +36,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.marcel.fido.R
 import com.marcel.fido.articles.domain.Article
 import com.marcel.fido.sources.domain.Source
@@ -92,8 +97,17 @@ fun HeadlinesScreen(
             onSourceSelected = callbacks.onSourceSelected
         )
     }
-    LaunchedEffect(Unit) {
-        viewModel.attachArguments(HeadlinesScreenViewModelArguments())
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val observer = LifecycleEventObserver{owner,event ->
+        if(event == Lifecycle.Event.ON_RESUME){
+            viewModel.onIntent(HeadlinesScreenViewModelIntent.OnLoadLatestArticles)
+        }
+    }
+    DisposableEffect(lifecycleOwner) {
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
     }
 }
 
