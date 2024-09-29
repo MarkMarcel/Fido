@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,6 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.marcel.fido.ui.headlines.HeadlinesScreen
 import com.marcel.fido.ui.headlines.HeadlinesScreenCallbacks
 import com.marcel.fido.ui.headlines.HeadlinesScreenViewModel
@@ -31,6 +33,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         val headlinesScreenViewModel: HeadlinesScreenViewModel by inject()
         setContent {
+            val navController = rememberNavController()
             FidoTheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
@@ -46,18 +49,26 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 ) { innerPadding ->
-                    Box(Modifier.fillMaxSize().padding(innerPadding)) {
-                        val callbacks = HeadlinesScreenCallbacks(
-                            onSourceSelected = { id ->
-                                headlinesScreenViewModel.onIntent(
-                                    HeadlinesScreenViewModelIntent.OnSourceSelected(id)
-                                )
-                            },
-                            onViewArticle = { id -> }
-                        )
-                        HeadlinesScreen(
-                            Modifier.fillMaxSize(), headlinesScreenViewModel, callbacks
-                        )
+                    NavHost(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding),
+                        navController = navController,
+                        startDestination = "/"
+                    ) {
+                        composable(route = "/") {
+                            val callbacks = HeadlinesScreenCallbacks(
+                                onSourceSelected = { id ->
+                                    headlinesScreenViewModel.onIntent(
+                                        HeadlinesScreenViewModelIntent.OnSourceSelected(id)
+                                    )
+                                },
+                                onViewArticle = { id -> }
+                            )
+                            HeadlinesScreen(
+                                Modifier.fillMaxSize(), headlinesScreenViewModel, callbacks
+                            )
+                        }
                     }
                 }
             }

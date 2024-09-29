@@ -1,5 +1,4 @@
 plugins {
-    kotlin("plugin.serialization") version "2.0.20"
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
 }
@@ -60,6 +59,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.coil)
+    implementation(libs.androidx.compose.nav)
     implementation(libs.gson)
     implementation(libs.http.logging)
     implementation(libs.koin)

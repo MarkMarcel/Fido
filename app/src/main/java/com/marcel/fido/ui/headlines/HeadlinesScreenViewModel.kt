@@ -32,13 +32,15 @@ class HeadlinesScreenViewModel(
         when (intent) {
             HeadlinesScreenViewModelIntent.OnLoadLatestArticles -> {
                 viewModelScope.launch {
+                    stateChanges.emit(state.value.copy(isLoading = true))
                     articleRepository.getHeadlinesFromSources(state.value.selectedSources.toList())
                         .onSuccess {
-                            stateChanges.emit(state.value.copy(articles = it))
+                            stateChanges.emit(state.value.copy(articles = it, isLoading = false))
                         }.onFailure {
                             stateChanges.emit(
                                 state.value.copy(
-                                    errorMessage = it.message ?: "Couldn't load articles"
+                                    errorMessage = it.message ?: "Couldn't load articles",
+                                    isLoading = false
                                 )
                             )
                         }
@@ -84,6 +86,7 @@ class HeadlinesScreenViewModelArguments : FidoViewModelArguments()
 data class HeadlinesScreenViewModelState(
     val allSources: List<Source> = emptyList(),
     val articles: List<Article> = emptyList(),
+    val isLoading: Boolean = false,
     val selectedSources: Set<String> = emptySet(),
     val errorMessage: String? = null
 ) : FidoViewModelState()

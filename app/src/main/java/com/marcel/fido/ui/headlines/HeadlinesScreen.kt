@@ -9,11 +9,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -51,12 +53,24 @@ fun HeadlinesScreen(
             HeadlinesScreenViewModelState::articles.get(state)
         }
     }
+    val isLoading by remember {
+        derivedStateOf {
+            HeadlinesScreenViewModelState::isLoading.get(state)
+        }
+    }
     val sourceSelectionViewModelState by remember {
         derivedStateOf {
             HeadlinesScreenViewModelState::allSources.get(state)
         }
     }
     Column(modifier.fillMaxSize()) {
+        if (isLoading) {
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                CircularProgressIndicator(
+                    modifier = Modifier.width(24.dp)
+                )
+            }
+        }
         Headlines(
             modifier = Modifier.weight(1f),
             articles = articleListViewModelState,
@@ -69,9 +83,6 @@ fun HeadlinesScreen(
     }
     LaunchedEffect(Unit) {
         viewModel.attachArguments(HeadlinesScreenViewModelArguments())
-    }
-    SideEffect {
-        viewModel.onIntent(HeadlinesScreenViewModelIntent.OnLoadLatestArticles)
     }
 }
 
@@ -129,7 +140,7 @@ fun SourceSelection(
             .wrapContentSize(Alignment.TopStart)
     ) {
         Row(Modifier.fillMaxWidth()) {
-            Text("",modifier.weight(1f))
+            Text("", modifier.weight(1f))
             Spacer(Modifier.size(8.dp))
             IconButton(onClick = { expanded = true }) {
                 Icon(Icons.Default.MoreVert, contentDescription = "Localized description")
