@@ -74,9 +74,12 @@ class HeadlinesScreenViewModel(
                 viewModelScope.launch {
                     stateChanges.emit(state.value.copy(selectedSources = currentSelection.toSet()))
                 }
+                onIntent(HeadlinesScreenViewModelIntent.OnLoadLatestArticles)
             }
         }
     }
+
+    fun getSelectedSource(id: String) = state.value.allSources.find { it.id == id }
 
     private val stateChanges = MutableStateFlow(HeadlinesScreenViewModelState())
 }

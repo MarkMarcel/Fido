@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Fido News</string>
     <string name="title_headlines_screen">Latest</string>
+    <string name="prompt_select_source">Select Source</string>
 </resources>
