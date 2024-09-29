@@ -17,10 +17,9 @@ class ArticleRepositoryImp(
         }
     }
 
-    override suspend fun getHeadlinesFromSources(sources: List<Source>): Result<List<Article>> {
+    override suspend fun getHeadlinesFromSources(sources: List<String>): Result<List<Article>> {
         return try {
-            val sourceIDS = sources.map { it.id }
-            val data = articleRemoteDataSource.getHeadlinesFromSources(sourceIDS).articles
+            val data = articleRemoteDataSource.getHeadlinesFromSources(sources).articles
             val articles = data.map { it.toDomain() }
             updateCacheWithLatestArticles(articles)
             return Result.success(cache.getAll())
